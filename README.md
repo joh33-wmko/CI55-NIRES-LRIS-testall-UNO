@@ -1,3 +1,6 @@
+# CI55-NIRES-LRIS-testall-UNO
+CI #55 NIRES and LRIS testAll to testall with UNO
+
 # testall
 Check basic functionality of Keck instrument systems.  
 (NOTE: This is a Python port of Keck testAll instrument test scripts into one shared code base.)
