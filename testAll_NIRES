@@ -1,0 +1,367 @@
+#!/bin/csh -f
+#+
+# testAll -- check functionality of all NIRES systems
+#
+# Purpose:
+#       Test all of the NIRES systems to determine whether they are
+#       working properly.  The following checks are made:
+#       - Check that all daemons are running
+#       - Check nsds and nids keywords libraries 
+#       - Check that the H2RG and H1 crates are alive via 'ping'
+#       - Check that nids and nsds keywords can be read
+#       - Check that all AC power keywords are 'on' for H1,H2RG,fcs,and guider
+#
+#
+# Usage:
+#       testAll [systems]
+# 
+# Arguments:
+#       systems = [daemons keywords dcs_keywords \
+#           boards temps]
+#               Systems which should be tested.  Defeault is all of them.
+# 
+# Output:
+#       Report written to stdout
+# 
+# Restrictions:
+# 
+# Exit values:
+#       0 = normal completion
+#       1 = error
+#
+# Example:
+#       1) To check instrument status:
+#               testAll
+#
+# Nominal output:
+# Modification history:
+#       2001-Mar-24     GDW     Original version
+#       2001-Mar-27     GDW     Added redpower/bluepower/guidepower test
+#       2001-Apr-03     GDW     Added test_kwlib for DCS and ACS tests
+#       2001-Apr-06     GDW     Added test_stage
+#       2001-Apr-18     GDW     Added ability to select systems for test
+#       2004-Nov-12     MK      Added testing of blue side window keyword 
+#       2004-Nov-16     MK      Added a check on ccdsel for blue side window check
+#       2006-Aug-26     GDW     Added check for CCD temp and power
+#       2008-Dec-08     ECC     Renamed punaluu to lrisserver/lris-red.
+#       2009-Aug-20     MK      Updated with changes for new red upgrade
+#       2009-Aug-24     MK      Added write_image checks
+#       2010-Apr-01     MK      Removed write_image checks- they are in ctx
+#                               Change default state to just report errors.
+#                               Added optional flag to take action.
+#       2014-Feb-24     GDW     Removed ACS check (not working)
+#	2017-Aug-11	PLG	Adapted to NIRES
+#-----------------------------------------------------------------------
+
+set act = 0
+# check for take action option
+if ( "$1" == "-a" ) then
+  set act = 1
+  shift
+endif
+
+# define all possible systems to test...
+set systems = ( daemons keywords dcs_keywords \
+            boards temps acs_keywords)
+
+# default state for each system is "off"...
+foreach system ( $systems )
+    set $system = 0
+end
+
+# define usage...
+set buf = $0
+set cmd = $buf:t
+set usage = "\aUsage: $cmd [$systems]\n"
+
+# if no args are specified, check all systems...
+if ( $#argv == 0 ) then
+    foreach system ( $systems )
+        set $system = 1
+    end
+endif
+
+# if args are specified, turn on certain systems...
+while ( $#argv > 0 )
+    set ok = 0
+    foreach system ( $systems )
+        if ( "$1" == "$system" ) then
+            set $system = 1
+            set ok = 1
+            shift
+        endif
+    end
+    if ( ! $ok) then
+        printf "$usage"
+        exit 1
+    endif
+end
+
+@ n = 0 # default state is "no errors found"...
+
+#----------------------------------------
+# Check daemons
+#----------------------------------------
+
+if ( $daemons ) then
+
+    # see whether programs are running...
+    printf "Checking for NIRES daemons:\n"
+    
+    @ i = 0
+    while ( $i < 2 )
+    
+        @ i++   # count number of iterations...
+        @ n = 0 # default state is "no errors found"...
+
+        foreach daemon (ntcs nids nfcs ngs )
+            
+            printf "\tChecking %s..." $daemon
+            get_nires_pid $daemon > /dev/null
+            set s = $status
+            if ( $s == 200 ) then
+                printf "OK\n"
+            else if( $s == 100) then
+                printf "\aERROR\n"
+                printf "\t\t%s is not running correctly. Inform the SA\n" $daemon
+                @ n++
+            else if( $s < 100) then
+                printf "\aERROR\n"
+                printf "\t\t%s is not running. Start it\n" $daemon
+                @ n++
+            endif
+
+        end
+
+        foreach daemon (nsds )
+            
+            printf "\tChecking %s..." $daemon
+            ssh niresserver2 get_nires_pid $daemon > /dev/null
+            set s = $status
+            if ( $s == 200 ) then
+                printf "OK\n"
+            else if( $s == 100) then
+                printf "\aERROR\n"
+                printf "\t\t%s is not running correctly. Inform the SA\n" $daemon
+                @ n++
+            else if( $s < 100) then
+                printf "\aERROR\n"
+                printf "\t\t%s is not running. Start it\n" $daemon
+                @ n++
+            endif
+        end
+
+
+
+        # exit loop if all systems are go...
+        if ( $n == 0 ) break
+
+        # if this is first iteration, restart software and try once more...
+        if ( $i == 1 && $act) then
+            printf "\tI will attempt to restart daemons,\n"
+           printf "\tthen check again\n"
+           nires start daemons
+            
+        # if this is second failure, something bad is going on --- quit...
+        else
+            printf "\tFailed again!  Giving up...\n"
+            printf "\t  Try running:  testAll -a  \n"
+            exit 1
+        endif
+    end
+endif
+
+
+#----------------------------------------
+# Check keywords...
+#----------------------------------------
+
+if ( $keywords || $dcs_keywords ) then
+    printf "Checking keywords:\n"
+endif
+
+if ( $keywords ) then
+    printf "\tChecking nids keywords..."
+    test_kwlib -silent nids
+    set s = $status
+    if ( $s == 0 ) then
+        printf "OK\n"
+    else
+        printf "\aERROR\n"
+        printf "\t\tNIDS keyword library is broken\n"
+        printf "\t\tPlease execute this command to restart software:\n"
+        printf "\t\t\trestart_low_level_software\n"
+        @ n++
+    endif
+endif
+    
+if ( $keywords ) then
+    printf "\tChecking nsds keywords..."
+    test_kwlib -silent nsds
+    set s = $status
+    if ( $s == 0 ) then
+       printf "OK\n"
+    else
+        printf "\aERROR\n"
+        printf "\t\tNSDS keyword library is broken\n"
+        printf "\t\tPlease execute this command to restart software:\n"
+        printf "\t\t\trestart_low_level_software\n"
+        @ n++
+    endif
+endif
+
+if ( $dcs_keywords ) then
+    printf "\tChecking dcs keywords..."
+    test_kwlib -silent dcs
+    set s = $status
+    if ( $s == 0 ) then
+        printf "OK\n"
+    else
+        printf "\aERROR\n"
+        printf "\t\tDCS keyword library is broken\n"
+        printf "\t\tPlease check whether the DCS software is running.\n"
+        @ n++
+    endif
+endif
+
+ if ( $acs_keywords ) then
+     printf "\tChecking acs keywords..."
+     test_kwlib -silent acs
+     set s = $status
+     if ( $s == 0 ) then
+       printf "OK\n"
+     else
+       printf "\aERROR\n"
+       printf "\t\tACS keyword library is broken\n"
+       printf "\t\tPlease check whether the ACS software is running.\n"
+       @ n++
+     endif
+ endif
+
+
+#----------------------------------------
+# Check crates...
+#----------------------------------------
+if ( $boards ) then
+
+    printf "Checking coonection to Leach board:\n"
+
+    printf "\tChecking whether H1 board is alive..."
+    tdl 1122 | fgrep Returned > /dev/null
+    set s = $status
+  if ( $s == 110 ) then
+        printf "OK\n"
+    else
+        printf "\aERROR\n"
+        printf "\t\tH1 leachboard is not responding\n"
+        printf "\t\t- Check power\n"
+        printf "\t\t- Check ethernet connection for Leach\n"
+        @ n++
+    endif
+    
+    printf "\tChecking whether H2RG board is alive..."
+    ssh nireseng@niresserver2 tdl 2222 | fgrep Returned > /dev/null
+    set s = $status
+    if ( $s == 110 ) then
+        printf "OK\n"
+    else
+     printf "\aERROR\n"
+        printf "\t\tH2RG board is not responding\n"
+        printf "\t\t- Check power\n"
+        printf "\t\t- Check ethernet connection\n"
+        @ n++
+    endif
+
+
+#    printf "\tChecking FCS stage status ..."
+#    set active = `show -s nfcs -terse active `
+#    if ( $active == 1 ) then
+#        printf "OK\n"
+#    else
+#        printf "\aERROR\n"
+#
+#        @ n++
+#    endif    
+    
+
+endif
+
+#----------------------------------------
+# Check temperature...
+#----------------------------------------
+if ( $temps ) then
+    printf "Checking temperatures:\n"
+
+
+        printf "\tChecking temperatures ..."
+       
+        temps | fgrep high > /tmp/temp1
+        set tempp = `wc /tmp/temp1`
+
+
+#set tempH2rg = `show -s ntcs -terse curtmp1`
+
+
+        if ( "$tempp" == "0 0 0 /tmp/temp1" ) then
+
+            printf "OK\n"
+        else
+            printf "\aERROR\n"
+            printf "\t\tTemperatures are too high\n"
+            temps
+            printf "\t\tThe Aux Tank sensor could show 1.0K\n"
+	    printf "\t\twhich is OK\n" 
+            @ n++
+        endif
+        rm -f /tmp/temp1
+endif
+
+#----------------------------------------
+# Check rotator...
+#----------------------------------------
+if ( $temps ) then
+    printf "Checking the rotator:\n"
+
+
+        printf "\tChecking power switches ..."
+       
+        testRotator | fgrep ERROR > /tmp/rot1
+        set rot1 = `wc /tmp/rot1`
+
+
+#set tempH2rg = `show -s ntcs -terse curtmp1`
+
+
+        if ( "$rot1" == "0 0 0 /tmp/rot1" ) then
+
+            printf "OK\n"
+        else
+            printf "\aERROR\n"
+            printf "\t\tRotator is not Ready\n"
+            testRotator
+            @ n++
+        endif
+        rm -f /tmp/rot1
+endif
+
+#printf $n
+#----------------------------------------
+# print final status...
+#----------------------------------------
+printf "---------------------------------------------------------------\n"
+if ( $n == 0 ) then
+    printf "          All NIRES systems tested appear functional.\n"
+endif
+if ( $n == 1 ) then
+    printf "          A total of 1 error was encountered.\n"
+endif
+if ($n >= 2) then
+    printf "             A total of %d errors were encountered.\n" $n
+    printf "             \n" 
+#    printf "             If you would like testAll to take action,\n" 
+#    printf "             re-reun with the "-a" option.\n" 
+#    printf "                    testAll -a \n" 
+
+endif
+printf "---------------------------------------------------------------\n"
+
