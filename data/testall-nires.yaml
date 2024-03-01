@@ -1,20 +1,23 @@
 {
+  'servers':
+  [
+     {"name":"niresserver1", "check":"ping", "server":"niresserver1"},
+     {"name":"niresserver2", "check":"ping", "server":"niresserver2"},
+  ],
   'daemons':
   [
-    {"name":"ntcs" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"ntcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nids" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nids_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nfcs" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nfcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    #{"name":"ngs" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"ngs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    #{"name":"nsds" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nsds_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"ngs" ,  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nires_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nsds" ,  "check":"ps",   "server":"niresserver2",  "flags":"auxww",  "pattern":"nsds_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"ntcs",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"ntcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"nids",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nids_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"nfcs",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nfcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"ngs",   "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nires_service", "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"nsds",  "check":"ps",   "server":"niresserver2",  "flags":"auxww",  "pattern":"nsds_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
   ],
   'keywords':
   [
     {"name":"nids",   "check":"show",  "service":"nids",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
     {"name":"nsds",   "check":"show",  "service":"nsds",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
-    {"name":"dcs2" ,   "check":"show",  "service":"dcs2",    "keyword":"ra",     "errmsg":"Check whether the DCS2 software is running."},
-    {"name":"acs2" ,   "check":"show",  "service":"acs2",    "keyword":"pmfm",   "errmsg":"Check whether the ACS2 software is running."},
+    {"name":"dcs2" ,  "check":"show",  "service":"dcs2",   "keyword":"ra",     "errmsg":"Check whether the DCS2 software is running."},
+    {"name":"acs2" ,  "check":"show",  "service":"acs2",   "keyword":"pmfm",   "errmsg":"Check whether the ACS2 software is running."},
   ],
   'boards':
   [
@@ -31,5 +34,11 @@
   'rotator':
   [
     {"name":"power switches", "check":"script",   "cmd":"ssh niresserver1 testRotator | fgrep ERROR",  "status": 1,  "errmsg":"Rotator is not Ready\n"},
+  ],
+  'storage':
+  [
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/",            "name": "/"},
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/usr/local",   "name": "/usr/local"},
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1500", "name": "/s/sdata1500"}
   ],
 }
