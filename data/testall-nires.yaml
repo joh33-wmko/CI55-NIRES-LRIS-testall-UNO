@@ -37,8 +37,21 @@
   ],
   'storage':
   [
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/",            "name": "/"},
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/usr/local",   "name": "/usr/local"},
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1500", "name": "/s/sdata1500"}
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/",               "name": "niresserver1; /"},
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/usr/local",      "name": "niresserver1: /usr/local"},
+    {"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1501",    "name": "niresserver1: /s/sdata1501"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1500",    "name": "niresserver1: /s/sdata1500"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1502",    "name": "niresserver1: /s/sdata1502"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires1",    "name": "niresserver1; /home/nires1"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires2",    "name": "niresserver1; /home/nires2"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires3",    "name": "niresserver1; /home/nires3"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires4",    "name": "niresserver1; /home/nires4"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires5",    "name": "niresserver1; /home/nires5"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires6",    "name": "niresserver1; /home/nires6"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires7",    "name": "niresserver1; /home/nires7"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires8",    "name": "niresserver1; /home/nires8"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires9",    "name": "niresserver1; /home/nires9"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nireseng",  "name": "niresserver1; /home/nireseng"},
+   #{"check":"df", "minval":50, "maxval":90, "pattern":"/niresserver2",   "name": "/niresserver2: /niresserver2"},
   ],
 }
