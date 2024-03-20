@@ -1,8 +1,10 @@
 {
   'servers':
   [
-     {"name":"niresserver1", "check":"ping", "server":"niresserver1"},
-     {"name":"niresserver2", "check":"ping", "server":"niresserver2"},
+    {"name":"niresserver1", "check":"ping", "server":"niresserver1"},
+    #{"name":"    uptime", "check":"script",   "cmd":"ssh niresserver1 uptime | fgrep ERROR",  "status": 1,  "errmsg":"uptime unavailable\n"},
+    {"name":"niresserver2", "check":"ping", "server":"niresserver2"},
+    #{"name":"    uptime", "check":"script",   "cmd":"ssh niresserver2 uptime | fgrep ERROR",  "status": 1,  "errmsg":"uptime unavailable\n"},
   ],
   'daemons':
   [
@@ -28,7 +30,8 @@
   [
     {"name":"Detector temp 1", "check":"show",  "service":"ntcs",   "keyword":"curtmp1",  "minval":73.0,   "maxval":75.0},
     {"name":"Detector temp 2", "check":"show",  "service":"ntcs",   "keyword":"curtmp2",  "minval":73.0,   "maxval":75.0},
-    {"name":"Auxiliary Tank",  "check":"show",  "service":"ntcs",   "keyword":"tmp5",     "minval":72.5,   "maxval":74.5,  "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
+    #{"name":"Auxiliary Tank",  "check":"show",  "service":"ntcs",   "keyword":"tmp5",     "minval":72.5,   "maxval":74.5,  "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
+    {"name":"Auxiliary Tank",  "check":"show",  "service":"ntcs",   "keyword":"tmp5",                      "maxval":74.5,                    "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
     {"name":"H1 cold finger",  "check":"show",  "service":"ntcs",   "keyword":"tmp8",     "minval":76.0,   "maxval":78.0},
   ],
   'rotator':
