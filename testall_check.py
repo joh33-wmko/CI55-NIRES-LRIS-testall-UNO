@@ -72,7 +72,6 @@ if instrument.lower() == 'nires':
     uptime_msg  = f"\nniresserver1's uptime: "
     uptime_ck = uptime1.split()
     if 'up' in uptime_ck:
-        #uptime_msg  = f"\nniresserver1's uptime: {uptime1}\n"
         uptime_msg  += f"{uptime1}\n"
     else:
         uptime_msg  += f"{uptime1}                           *** MISSING INFO ***\n"
@@ -80,7 +79,7 @@ if instrument.lower() == 'nires':
 
     uptime2 = get_uptime('niresserver2')
     uptime_msg += f"niresserver2's uptime: {uptime2}\n\n"
-    print(uptime_msg)
+    #print(uptime_msg)
 
 message = uptime_msg
 
