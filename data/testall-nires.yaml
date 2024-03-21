@@ -18,8 +18,8 @@
   [
     {"name":"nids",   "check":"show",  "service":"nids",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
     {"name":"nsds",   "check":"show",  "service":"nsds",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
-    {"name":"dcs2" ,  "check":"show",  "service":"dcs2",   "keyword":"ra",     "errmsg":"Check whether the DCS2 software is running."},
-    {"name":"acs2" ,  "check":"show",  "service":"acs2",   "keyword":"pmfm",   "errmsg":"Check whether the ACS2 software is running."},
+    #{"name":"dcs2" ,  "check":"show",  "service":"dcs2",   "keyword":"ra",     "errmsg":"Check whether the DCS2 software is running."},
+    #{"name":"acs2" ,  "check":"show",  "service":"acs2",   "keyword":"pmfm",   "errmsg":"Check whether the ACS2 software is running."},
   ],
   'boards':
   [
