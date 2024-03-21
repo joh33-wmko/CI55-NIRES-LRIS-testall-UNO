@@ -55,8 +55,8 @@ else:
 
 send_email(recipients, message, error)   # testing...
 
-if (recipients and error):
-   send_email(recipients, message, error)
+#if (recipients and error):
+#   send_email(recipients, message, error)
 
 print()
 print(message)
