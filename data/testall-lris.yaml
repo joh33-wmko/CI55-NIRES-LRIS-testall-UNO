@@ -1,0 +1,82 @@
+{
+  "daemons":
+  [
+      {"name":"traffic",         "check":"ps",   "server":"lrisserver",  "flags":"axc",  "pattern":"traffic",                       "fix":"start_lris_daemons"},
+      {"name":"cserv",           "check":"ps",   "server":"lrisserver",  "flags":"axc",  "pattern":"cserv",                         "fix":"start_lris_daemons"},
+      {"name":"infoman_blue",    "check":"ps",   "server":"lrisserver",  "flags":"ax",   "pattern":["infoman", "lb_info"],          "fix":"start_lris_daemons"},
+      {"name":"infoman_red",     "check":"ps",   "server":"lrisserver",  "flags":"ax",   "pattern":["infoman", "l_info"],           "fix":"start_lris_daemons"},
+      {"name":"watch_ccd_blue",  "check":"ps",   "server":"lrisserver",  "flags":"axw",  "pattern":["watch_ccd", "lrisblue/fits"],  "fix":"start_lris_daemons"},
+      {"name":"watch_ccd_red",   "check":"ps",   "server":"lrisserver",  "flags":"axw",  "pattern":["watch_ccd", "lris/fits"],      "fix":"start_lris_daemons"},
+  ],
+
+  "keywords":
+  [
+    {"name":"blue keywords",  "check":"show",  "service":"lrisblue",  "keyword":"instrume",  "errmsg":"BLUE keyword library is broken.",  "fixmsg":"To fix, execute this command: restart_low_level_software"},
+    {"name":"red keywords",   "check":"show",  "service":"lris",      "keyword":"instrume",  "errmsg":"RED keyword library is broken.",   "fixmsg":"To fix, execute this command: restart_low_level_software"},
+  ],
+
+  "dcs_keywords":
+  [
+    {"name":"dcs" ,           "check":"show",  "service":"dcs",       "keyword":"ra",        "errmsg":"Check whether the DCS software is running."},
+  ],
+
+  #todo: show/ktl for 3 glycol keywords not working
+  "glycol":
+  [
+    {"check":"show",  "service":"lris",  "keyword":"GLYBLUE",  "val":"ok",  "name":"blue side glycol"},
+    {"check":"show",  "service":"lris",  "keyword":"GLYRED",   "val":"ok",  "name":"red side glycol"},
+    {"check":"show",  "service":"lris",  "keyword":"GLYGUID",  "val":"ok",  "name":"guider glycol"},
+  ],
+
+  "crates":
+  [
+    {"name":"blue crate",         "check":"script",   "cmd":"ssh lrisserver /usr/sbin/ping ted 3 | fgrep alive",   "status": 0,  "errmsg":"Blue CCD crate is not responding.",  "fixmg":"Check power to the crate. Check ethernet connection from lrisserver to crate. Reboot crate."},
+    {"name":"blue CCD keywords",  "check":"show",   "service":"lrisblue",  "keyword":"ttime",  "errmsg":"blue CCD create is not providing keywords"},
+    {"name":"blue saddlebag",     "check":"script",   "cmd":"ssh lrisserver tdl blue",   "status": 0,  "stdout": 1},
+
+    {"name":"red focus galil",    "check":"script",   "cmd":"ssh lrisserver /usr/sbin/ping 192.168.12.30 3 | fgrep alive",   "status": 0,  "errmsg":"Red focus galil is not responding.",  "fixmsg":"Check power to the galil - After power is on, run home_redfocus"},
+    {"name":"red focus keywords", "check":"show",   "service":"lredfoc",  "keyword":"disp0err",  "errmsg":"lredfoc keywords could not be read"},
+    {"name":"red focus stage",    "check":"show",   "service":"lredfoc",  "keyword":"rfocerr",   "fix":"ssh lrisserver home_redfocus force"},
+
+    {"name":"red crate",          "check":"script",   "cmd":"ssh lrisserver /usr/sbin/ping biden 3 | fgrep alive",   "status": 0,  "errmsg":"Red CCD crate is not responding.",  "fixmg":"Check power to the crate. Check ethernet connection from lrisserver to crate. Reboot crate."},
+    {"name":"red saddlebag",      "check":"script",   "cmd":"ssh lrisserver tdl red",   "status": 0,  "stdout": 1},
+    {"name":"red CCD keywords",   "check":"show",   "service":"lris",  "keyword":"ttime",  "errmsg":"red CCD create is not providing keywords"},
+  ],
+
+  "ccds":
+  [
+    {"name":"temps",              "check":"script",   "cmd":"ssh lrisserver temps",  "status": 0,  "stdout": 1},
+    {"name":"CCD power",          "check":"show",  "service":"lrisblue",  "keyword":"utbp30v",  "minval": 30,  "fix":"nbc_pon"},
+  ],
+
+  "tservers":
+  [
+    {"name":"blue terminal server",  "check":"script",   "cmd":"ssh lrisserver /usr/sbin/ping tsblue 3 | fgrep alive",  "status": 0,  "errmsg":"Blue terminal server is not reachable.",  "fixmsg":"Check power to instrument.  Check fiber connections to instrument.  Check glycol supply to instrument."},
+    {"name":"red terminal server",   "check":"script",   "cmd":"ssh lrisserver /usr/sbin/ping tsred 3 | fgrep alive",   "status": 0,   "errmsg":"Red terminal server is not reachable.",   "fixmsg":"Check power to instrument.  Check fiber connections to instrument.  Check glycol supply to instrument."},
+  ],
+
+  "power":
+  [
+    {"name":"blue.filt.enc",  "check":"show",  "service":"lris",  "keyword":"power19",  "val": 1,  "fix":"bluepower on"}
+    #todo: more needed here but not sure if power index is dynamic or not
+  ],
+
+  "stages":
+  [
+    {"check":"show",   "service":"lris",  "keyword":"slitmask"},
+    {"check":"show",   "service":"lris",  "keyword":"grating"},
+    {"check":"show",   "service":"lris",  "keyword":"redfnum"},
+    {"check":"show",   "service":"lris",  "keyword":"redfocus"},
+    {"check":"show",   "service":"lris",  "keyword":"dichroic"},
+    {"check":"show",   "service":"lris",  "keyword":"grism"},
+    {"check":"show",   "service":"lris",  "keyword":"blufnum"},
+    {"check":"show",   "service":"lris",  "keyword":"blufocus"},
+    {"name":"positioning",  "check":"script", "cmd":"ssh lrisserver test_stage -terse",  "status": 1,  "stdout": 1,  "errmsg":"Run 'test_stage' command for further diagnostics\n"},
+  ],
+
+  "windowing":
+  [
+    #todo: This one involves AND + OR
+  ],
+
+}

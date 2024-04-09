@@ -1,0 +1,540 @@
+computers:
+- name: VNC Server (vm-kpf)
+  check: ping
+  server: kpf
+- name: KPF Server
+  check: ping
+  server: kpfserver
+- name: KPF FIU Server
+  check: ping
+  server: kpffiuserver
+- name: KPF Etalon Server
+  check: ping
+  server: kpfetalon
+- name: KPF Etalon Thin Client
+  check: ping
+  server: tc-su-kpfetalon
+# - name: KPF LFC
+#   check: ping
+#   server: 192.168.23.199
+
+# daemons:
+# soundboard
+- name: Soundboard
+  check: ps
+  flags: auxww
+  pattern: /kroot/rel/default/bin/soundboard
+  server: kpf
+  errtype: error
+# exposure meter dispatchers
+- name: Exposure Meter SBIG (kpf_expmeter1)
+  check: ps
+  flags: auxww
+  pattern: /kroot/rel/default/bin/expmeter
+  server: kpfserver
+  errtype: error
+- name: Exposure Meter DRP (kpf_expmeter2)
+  check: ps
+  flags: auxww
+  pattern: expmeter_specsum -c /kroot/rel/default/data/kpf_expmeter/kpf_expmeter_dispatch_2.conf
+  server: kpfserver
+  errtype: error
+# kpf_hk
+- name: Ca H&K Control (kpf_hk)
+  check: ps
+  flags: auxww
+  pattern: andord kpf_hk
+  server: kpffiuserver
+  errtype: error
+# kpfmon1
+- name: EMIR (kpfmon1)
+  check: ps
+  flags: auxww
+  pattern: emir -c kpfmon1.cfg -d 1 kpfmon
+  server: kpfserver
+  errtype: error
+# kpfmot1
+- name: Agitator Control (kpfmot1)
+  check: ps
+  flags: auxww
+  pattern: galildisp.tcl kpfmot 1
+  server: kpfserver
+  errtype: error
+# kpfexpose dispatchers
+- name: Red/Green Shutter Control (kpfexpose1)
+  check: ps
+  flags: auxww
+  pattern: galildisp.tcl kpfexpose 1
+  server: kpfserver
+  errtype: error
+- name: CaHK/EM Shutter Control (kpfexpose2)
+  check: ps
+  flags: auxww
+  pattern: galildisp.tcl kpfexpose 2
+  server: kpfserver
+  errtype: error
+# kpfpower dispatchers
+- name: PDU A Agitator (kpfpowerA)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerA.conf
+  server: kpfserver
+  errtype: error
+- name: PDU B Vac cart (kpfpowerB)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerB.conf
+  server: kpfserver
+  errtype: error
+- name: PDU C Aux rack 1 (kpfpowerC)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerC.conf
+  server: kpfserver
+  errtype: error
+- name: PDU D Aux rack 2 (kpfpowerD)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerD.conf
+  server: kpfserver
+  errtype: error
+- name: PDU E Aux rack 3 (kpfpowerE)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerE.conf
+  server: kpfserver
+  errtype: error
+- name: PDU F Cal rack 1 (kpfpowerF)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerF.conf
+  server: kpfserver
+  errtype: error
+- name: PDU G Cal rack 2 (kpfpowerG)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerG.conf
+  server: kpfserver
+  errtype: error
+- name: PDU H Cal rack 3 (kpfpowerH)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerH.conf
+  server: kpfserver
+  errtype: error
+- name: PDU I Cal rack 4 (kpfpowerI)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerI.conf
+  server: kpfserver
+  errtype: error
+- name: PDU J Cal H+K (kpfpowerJ)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerJ.conf
+  server: kpfserver
+  errtype: error
+- name: PDU K FIU (kpfpowerK)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerK.conf
+  server: kpfserver
+  errtype: error
+- name: PDU L Cal bench (kpfpowerL)
+  check: ps
+  flags: auxww
+  pattern: pdud -c /kroot/rel/default/data/kpfpower/kpfpowerL.conf
+  server: kpfserver
+  errtype: error
+# kpfgreen dispatchers
+- name: COO Software (gcamerad)
+  check: ps
+  flags: auxww
+  pattern: camerad -f /kroot/rel/default/data/kpfgreen/kpf.green.cfg
+  server: kpfserver
+  errtype: error
+- name: Green Server/Archon (kpfgreen0)
+  check: ps
+  flags: auxww
+  pattern: ktlcamerad kpfgreen 0
+  server: kpfserver
+  errtype: error
+- name: Green Instec (kpfgreen1)
+  check: ps
+  flags: auxww
+  pattern: instec_ccdtemp -c /kroot/rel/default/data/kpfgreen/kpfgreen_ccdtemp_1.conf
+  server: kpfserver
+  errtype: error
+- name: Green Collimator Ion Pump (kpfgreen2)
+  check: ps
+  flags: auxww
+  pattern: gammaip_disp -c /kroot/rel/default/data/kpfgreen/kpfgreen_ip_2.conf
+  server: kpfserver
+  errtype: error
+- name: Green Echelle Ion Pump (kpfgreen3)
+  check: ps
+  flags: auxww
+  pattern: gammaip_disp -c /kroot/rel/default/data/kpfgreen/kpfgreen_ip_3.conf
+  server: kpfserver
+  errtype: error
+# kpfmet dispatchers
+- name: Vaisala (kpfmet1)
+  check: ps
+  flags: auxww
+  pattern: kpfmet_vaisalad -c /kroot/rel/default/data/kpfmet/kpfmet_1.conf
+  server: kpfserver
+  errtype: error
+- name: Green Lakeshore (kpfmet2)
+  check: ps
+  flags: auxww
+  pattern: kpf_lakeshored -c /kroot/rel/default/data/kpfmet/kpfmet_2.conf
+  server: kpfserver
+  errtype: error
+- name: Red Lakeshore (kpfmet3)
+  check: ps
+  flags: auxww
+  pattern: kpf_lakeshored -c /kroot/rel/default/data/kpfmet/kpfmet_3.conf
+  server: kpfserver
+  errtype: error
+- name: LinkHub-E (kpfmet4)
+  check: ps
+  flags: auxww
+  pattern: linkhub_dispatcher -c /kroot/rel/default/data/kpfmet/kpfmet_4.conf
+  server: kpfserver
+  errtype: error
+- name: Spectrometer Lakeshore (kpfmet5)
+  check: ps
+  flags: auxww
+  pattern: kpf_lakeshored -c /kroot/rel/default/data/kpfmet/kpfmet_5.conf
+  server: kpfserver
+  errtype: error
+# kpfssd
+- name: KPF Start/Stop Service (kpfssd)
+  check: ps
+  flags: auxww
+  pattern: ktlssd kpfssd
+  server: kpfserver
+  errtype: error
+# kpfassemble
+- name: L0 FITS file assembler (kpfassemble)
+  check: ps
+  flags: auxww
+  pattern: kpfassemble -c /kroot/rel/default/data/kpfassemble/kpfassemble_dispatch_1.conf
+  server: kpfserver
+  errtype: error
+# kpfconfig
+- name: Imtype and fiber status (kpfconfig1)
+  check: ps
+  flags: auxww
+  pattern: inst_image -c /kroot/rel/default/data/kpfconfig/kpfconfig_dispatch_1.conf
+  server: kpfserver
+  errtype: error
+# kpfcal
+- name: (kpfcal1)
+  check: ps
+  flags: auxww
+  pattern: thorwheeld -c /kroot/rel/default/data/kpfcal/kpfcal_1.conf
+  server: kpfserver
+  errtype: error
+- name: Calibration source control (kpfcal2)
+  check: ps
+  flags: auxww
+  pattern: galildisp.tcl kpfcal 2
+  server: kpfserver
+  errtype: error
+# - name: NEWPORT 1830-R-GPIB (kpfcal3)
+#   check: ps
+#   flags: auxww
+#   pattern: galildisp.tcl kpfcal 3
+#   server: kpfserver
+#   errtype: error
+- name: (kpfcal4)
+  check: ps
+  flags: auxww
+  pattern: newport_intensityd -c /kroot/rel/default/data/kpfcal/kpfcal_4.conf
+  server: kpfserver
+  errtype: error
+- name: Menlo LFC Host (kpfcal6)
+  check: ps
+  flags: auxww
+  pattern: menlo_lfc_d -c /kroot/rel/default/data/kpfcal/kpfcal_6.conf
+  server: kpfserver
+  errtype: error
+# kpflamps
+- name: Lamp control (kpflamps)
+  check: ps
+  flags: auxww
+  pattern: kpflamps -c /kroot/rel/default/data/kpflamps/kpflamps_dispatch_1.conf
+  server: kpfserver
+  errtype: error
+# kpffiu
+- name: Micronix FIU motors (kpffiu1)
+  check: ps
+  flags: auxww
+  pattern: micronixd -c /kroot/rel/default/data/kpffiu/kpffiu_dispatch_1.conf
+  server: kpffiuserver
+  errtype: error
+- name: npoint tip/tilt controller (kpffiu2)
+  check: ps
+  flags: auxww
+  pattern: npointd -c /kroot/rel/default/data/kpffiu/kpffiu_dispatch_2.conf
+  server: kpffiuserver
+  errtype: error
+- name: Overall FIU logic (kpffiu3)
+  check: ps
+  flags: auxww
+  pattern: kpffiud -c /kroot/rel/default/data/kpffiu/kpffiu_dispatch_3.conf
+  server: kpffiuserver
+  errtype: error
+# kpfred dispatchers
+- name: COO Software (rcamerad)
+  check: ps
+  flags: auxww
+  pattern: camerad -f /kroot/rel/default/data/kpfred/kpf.red.cfg
+  server: kpfserver
+  errtype: error
+- name: Red Server/Archon (kpfred0)
+  check: ps
+  flags: auxww
+  pattern: ktlcamerad kpfred 0
+  server: kpfserver
+  errtype: error
+- name: Red Instec (kpfred1)
+  check: ps
+  flags: auxww
+  pattern: instec_ccdtemp -c /kroot/rel/default/data/kpfred/kpfred_ccdtemp_1.conf
+  server: kpfserver
+  errtype: error
+- name: Red Collimator Ion Pump (kpfred2)
+  check: ps
+  flags: auxww
+  pattern: gammaip_disp -c /kroot/rel/default/data/kpfred/kpfred_ip_2.conf
+  server: kpfserver
+  errtype: error
+- name: Red Echelle Ion Pump (kpfred3)
+  check: ps
+  flags: auxww
+  pattern: gammaip_disp -c /kroot/rel/default/data/kpfred/kpfred_ip_3.conf
+  server: kpfserver
+  errtype: error
+# kpfguide
+- name: CRED2 (kpfguide1)
+  check: ps
+  flags: auxww
+  pattern: cred2d -c /kroot/rel/default/data/kpfguide/kpfguide_1.conf
+  server: kpffiuserver
+  errtype: error
+- name: Tip/tilt calculations (kpfguide2)
+  check: ps
+  flags: auxww
+  pattern: kpftiptiltd -c /kroot/rel/default/data/kpfguide/kpfguide_2.conf
+  server: kpffiuserver
+  errtype: error
+# kpfheaders
+- name: KTL keyword header storage (kpfheaders)
+  check: ps
+  flags: auxww
+  pattern: keygrabber -c /kroot/rel/default/data/kpfheaders/keyheaderd.conf -y /kroot/rel/default/data/kpfheaders/keyheader.conf
+  server: kpfserver
+  errtype: error
+# kpfvac
+- name: Leybold vacuum monitor (kpfvac1)
+  check: ps
+  flags: auxww
+  pattern: graphix2d kpfvac 1
+  server: kpfserver
+  errtype: error
+- name: Leybold vacuum pump control (kpfvac2)
+  check: ps
+  flags: auxww
+  pattern: turbocontrol kpfvac
+  server: kpfserver
+  errtype: error
+
+keywords:
+# Fills
+- name: Green Dewar Weight
+  check: script
+  cmd: kpfdo CheckDewarWeights green
+  val: Dewar weight is OK
+- name: Red Dewar Weight
+  check: script
+  cmd: kpfdo CheckDewarWeights red
+  val: Dewar weight is OK
+# Other
+- name: Allow Scheduled Cals
+  check: show
+  service: kpfconfig
+  keyword: ALLOWSCHEDULEDCALS
+  val: "Yes"
+  errtype: warn
+- name: Script Pause
+  check: show
+  service: kpfconfig
+  keyword: SCRIPTPAUSE
+  val: "No"
+  errtype: warn
+- name: Script Stop
+  check: show
+  service: kpfconfig
+  keyword: SCRIPTSTOP
+  val: "No"
+  errtype: warn
+- name: Script Status
+  check: script
+  cmd: is_script_alive
+  pattern: "OK"
+- name: Guider TRIGCUBE
+  check: show
+  service: kpfguide
+  keyword: TRIGCUBE
+  val: "Inactive"
+  errtype: warn
+- name: kpfexpose status
+  check: show
+  service: kpfexpose
+  keyword: EXPOSE
+  val:
+  - Ready
+  - Start
+  - InProgress
+  - Readout
+  errtype: error
+- name: Green CCD Power
+  check: show
+  service: kpfgreen
+  keyword: CCDPOWER
+  val: "On"
+  errtype: error
+- name: Green Powersupply
+  check: show
+  service: kpfgreen
+  keyword: POWERSUPPLY
+  val: "OK"
+  errtype: error
+- name: Red CCD Power
+  check: show
+  service: kpfred
+  keyword: CCDPOWER
+  val: "On"
+  errtype: error
+- name: Red Powersupply
+  check: show
+  service: kpfred
+  keyword: POWERSUPPLY
+  val: "OK"
+  errtype: error
+- name: Sci FVC Power
+  check: show
+  service: kpfpower
+  keyword: KPFFVC1
+  val: "Off"
+  errtype: warn
+- name: CaHK FVC Power
+  check: show
+  service: kpfpower
+  keyword: KPFFVC2
+  val: "Off"
+  errtype: warn
+- name: Cal FVC Power
+  check: show
+  service: kpfpower
+  keyword: KPFFVC3
+  val: "Off"
+  errtype: warn
+- name: Exposure Meter Subframe (Left)
+  check: show
+  service: kpf_expmeter
+  keyword: LEFT
+  val: 1
+  errtype: error
+- name: Exposure Meter Subframe (Top)
+  check: show
+  service: kpf_expmeter
+  keyword: TOP
+  val: 0
+  errtype: error
+- name: Exposure Meter Subframe (Width)
+  check: show
+  service: kpf_expmeter
+  keyword: WIDTH
+  val: 651
+  errtype: error
+- name: Exposure Meter Subframe (Height)
+  check: show
+  service: kpf_expmeter
+  keyword: HEIGHT
+  val: 300
+  errtype: error
+# Calibration Lamp Intensities
+- name: Etalon Light Source
+  check: show
+  service: kpfcal
+  keyword: ETALONFIBER
+  minval: 1e-11
+  errtype: error
+- name: Th Daily Lamp Intensity
+  check: show
+  service: kpfcal
+  keyword: TH_DAILY
+  minval: 1e-6
+  errtype: error
+- name: U Daily Lamp Intensity
+  check: show
+  service: kpfcal
+  keyword: U_DAILY
+  minval: 1e-6
+  errtype: error
+- name: Broadband Light Source
+  check: show
+  service: kpfcal
+  keyword: BRDBANDFIBER
+  minval: 1e-6
+  errtype: error
+
+# kpfmon status
+emir:
+- name: kpfmon Alarms AVAILABILITY
+  check: emir
+  service: kpfmon
+  keyword: AVAILABILITY
+- name: kpfmon Alarms GREEN
+  check: emir
+  service: kpfmon
+  keyword: GREEN
+- name: kpfmon Alarms RED
+  check: emir
+  service: kpfmon
+  keyword: RED
+- name: kpfmon Alarms CAMSTATE
+  check: emir
+  service: kpfmon
+  keyword: CAMSTATE
+- name: kpfmon Alarms LAMPS
+  check: emir
+  service: kpfmon
+  keyword: LAMPS
+- name: kpfmon Alarms SHUTTERS
+  check: emir
+  service: kpfmon
+  keyword: SHUTTERS
+- name: kpfmon Alarms VAC
+  check: emir
+  service: kpfmon
+  keyword: VAC
+#- name: kpfmon Alarms POWER
+#  check: emir
+#  service: kpfmon
+#  keyword: POWER
+- name: kpfmon Alarms FIU
+  check: emir
+  service: kpfmon
+  keyword: FIU
+- name: kpfmon Alarms OTHER
+  check: emir
+  service: kpfmon
+  keyword: OTHER
+- name: kpfmon Alarms LN2
+  check: emir
+  service: kpfmon
+  keyword: LN2

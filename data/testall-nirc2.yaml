@@ -1,0 +1,32 @@
+{
+  "32-bit mode":
+  [
+    {"name":"mode test",    "check":"script",   "cmd":"ssh nirc2server isainfo -v",   "pattern": "32-bit",  "stdout": 1,  "errmsg":"The processor is not running in 32-bit mode. This will prevent the transputers from working.",  "fixmsg":"Contact support personnel to have them reboot waikoko in 32-bit mode."},
+  ],
+  
+  "Aladdin":
+  [
+    {"name":"server test",  "check":"script",   "cmd":"ssh nirc2server ct | grep \"alad*_server_bin\" | wc | awk '{print $1}'",   "val": 3,  "errmsg":"Could not find required 3 server tasks running",  "fixmsg":"Try restarting the servers by typing 'nirc2 start alad'"},
+    {"name":"keyword read",     "check":"show",  "service":"alad",  "keyword":"itime",  "fixmsg": "The Aladdin keywords are not working. Try restarting the Aladdin software by typing 'restart_alad' or 'restart_alad_nodcs'.  Run 'check' to test communication with the transputers."},
+#TODO
+#    {"name":"keyword set",     "check":"modify",  "service":"alad",  "keyword":"outdir",  "val":{"service":"alad", "keyword":"outdir"},  "fixmsg": "Could not set the Aladdin keyword. There may be a problem (partial hang) of the alad server. Try restarting by typing 'nirc2 start alad'."},
+  ],
+
+  "transputer":
+  [
+#TODO
+  ],
+
+  "motor":
+  [
+    {"name":"motor daemon",     "check":"show",  "service":"nirc2",  "keyword":"lock",      "fixmsg": "Try restarting it by typing 'restart_Daemons'."},
+    {"name":"motor keywords",   "check":"show",  "service":"nirc2",  "keyword":"camraw",    "fixmsg": "If the motor daemon appears healthy: 1) Make sure motor power is turned on. (In particular, the camera power.) 2) Check the serial link. 3) Make sure the Ethernet is connected to the terminal server."},
+  ],
+
+  "io":
+  [
+    {"name":"IO daemon",        "check":"show",  "service":"nirc2",  "keyword":"tm_temp3",  "fixmsg": "Try restarting it using 'restart_IOd'. Make sure that the Lakeshore temperature controllers and the DGH
+     modules are powered. Make sure that the electronics connections are OK."},
+   ]
+
+}
