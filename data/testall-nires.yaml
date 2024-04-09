@@ -2,59 +2,59 @@
   'servers':
   [
     {"name":"niresserver1", "check":"ping", "server":"niresserver1"},
-    #{"name":"    uptime", "check":"script",   "cmd":"ssh niresserver1 uptime | fgrep ERROR",  "status": 1,  "errmsg":"uptime unavailable\n"},
     {"name":"niresserver2", "check":"ping", "server":"niresserver2"},
-    #{"name":"    uptime", "check":"script",   "cmd":"ssh niresserver2 uptime | fgrep ERROR",  "status": 1,  "errmsg":"uptime unavailable\n"},
+    {"name":"nires",        "check":"ping", "server":"nires"},
+  ],
+  'servers by keywords':
+  [
+    {"name":"NIRES niresserver1", "check":"show", "service":"niresproc", "keyword":"NIRESSERVER1PIX", "val":0 },
+    {"name":"NIRES niresserver2", "check":"show", "service":"niresproc", "keyword":"NIRESSERVER2PIX", "val":0 },
+    {"name":"NIRES nires       ", "check":"show", "service":"niresproc", "keyword":"NIRESVMPIX",      "val":0 },
   ],
   'daemons':
   [
-    {"name":"ntcs",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"ntcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nids",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nids_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nfcs",  "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nfcs_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"ngs",   "check":"ps",   "server":"niresserver1",  "flags":"auxww",  "pattern":"nires_service", "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
-    {"name":"nsds",  "check":"ps",   "server":"niresserver2",  "flags":"auxww",  "pattern":"nsds_service",  "excludes":["get_nires_pid", "getKeywords"],  "num":2,  "exit":"all",  "fixcmd":"nires start daemons"},
+    {"name":"nids", "check":"ps", "server":"niresserver1", "flags":"auxww", "pattern":"nids_service",  "excludes":["get_nires_pid", "getKeywords"], "num":2, "exit":"all", "fixcmd":"nires start daemons"},
+    {"name":"nsds", "check":"ps", "server":"niresserver2", "flags":"auxww", "pattern":"nsds_service",  "excludes":["get_nires_pid", "getKeywords"], "num":2, "exit":"all", "fixcmd":"nires start daemons"},
+    {"name":"nfcs", "check":"ps", "server":"niresserver1", "flags":"auxww", "pattern":"nfcs_service",  "excludes":["get_nires_pid", "getKeywords"], "num":2, "exit":"all", "fixcmd":"nires start daemons"},
+    {"name":"ngs",  "check":"ps", "server":"niresserver1", "flags":"auxww", "pattern":"nires_service", "excludes":["get_nires_pid", "getKeywords"], "num":2, "exit":"all", "fixcmd":"nires start daemons"},
+    {"name":"ntcs", "check":"ps", "server":"niresserver1", "flags":"auxww", "pattern":"ntcs_service",  "excludes":["get_nires_pid", "getKeywords"], "num":2, "exit":"all", "fixcmd":"nires start daemons"},
+    {"name":"NIRES nids       ", "check":"show", "service":"niresproc", "keyword":"NIDSPSQ",      "val":2 },
+    {"name":"NIRES nsds       ", "check":"show", "service":"niresproc", "keyword":"NSDSPSQ",      "val":2 },
+    {"name":"NIRES nfcs       ", "check":"show", "service":"niresproc", "keyword":"NFCSPSQ",      "val":2 },
+    {"name":"NIRES ngs        ", "check":"show", "service":"niresproc", "keyword":"NGSPSQ",       "val":2 },
+    {"name":"NIRES ntcs       ", "check":"show", "service":"niresproc", "keyword":"NTCSPSQ",      "val":2 },
   ],
-  'keywords':
+
+  'keyword services':
   [
-    {"name":"nids",   "check":"show",  "service":"nids",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
-    {"name":"nsds",   "check":"show",  "service":"nsds",   "keyword":"instr",  "fixcmd":"restart_low_level_software"},
-    #{"name":"dcs2" ,  "check":"show",  "service":"dcs2",   "keyword":"ra",     "errmsg":"Check whether the DCS2 software is running."},
-    #{"name":"acs2" ,  "check":"show",  "service":"acs2",   "keyword":"pmfm",   "errmsg":"Check whether the ACS2 software is running."},
+    {"name":"nids", "check":"show", "service":"nids",   "keyword":"instr",    "fixcmd":"restart_low_level_software"},
+    {"name":"nsds", "check":"show", "service":"nsds",   "keyword":"instr",    "fixcmd":"restart_low_level_software"},
+    {"name":"nfcs", "check":"show", "service":"nfcs",   "keyword":"status",   "fixcmd":"restart_low_level_software"},
+    {"name":"ngs",  "check":"show", "service":"nires",  "keyword":"instrume", "fixcmd":"restart_low_level_software"},
+    {"name":"ntcs", "check":"show", "service":"ntcs",   "keyword":"showall",  "fixcmd":"restart_low_level_software"},
   ],
   'boards':
   [
-    {"name":"H1 leachboard",  "check":"script",   "cmd":"ssh niresserver1 tdl 1122 | fgrep Returned > /dev/null",   "status": 0,  "errmsg":"Board is not responding. Check power and ethernet connection."},
-    {"name":"H2RG board",     "check":"script",   "cmd":"ssh niresserver2 tdl 2222 | fgrep Returned > /dev/null",   "status": 0,  "errmsg":"Board is not responding. Check power and ethernet connection."},
+    {"name":"H1 leachboard", "check":"script", "cmd":"ssh niresserver1 tdl 1122 | fgrep Returned > /dev/null", "status": 0, "errmsg":"Board is not responding. Check power and ethernet connection."},
+    {"name":"H2RG board",    "check":"script", "cmd":"ssh niresserver2 tdl 2222 | fgrep Returned > /dev/null", "status": 0, "errmsg":"Board is not responding. Check power and ethernet connection."},
   ],
   'temps':
   [
-    {"name":"Detector temp 1", "check":"show",  "service":"ntcs",   "keyword":"curtmp1",  "minval":73.0,   "maxval":75.0},
-    {"name":"Detector temp 2", "check":"show",  "service":"ntcs",   "keyword":"curtmp2",  "minval":73.0,   "maxval":75.0},
-    #{"name":"Auxiliary Tank",  "check":"show",  "service":"ntcs",   "keyword":"tmp5",     "minval":72.5,   "maxval":74.5,  "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
-    {"name":"Auxiliary Tank",  "check":"show",  "service":"ntcs",   "keyword":"tmp5",                      "maxval":74.5,                    "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
-    {"name":"H1 cold finger",  "check":"show",  "service":"ntcs",   "keyword":"tmp8",     "minval":76.0,   "maxval":78.0},
+    {"name":"Detector temp 1", "check":"show", "service":"ntcs", "keyword":"curtmp1", "minval":73.0, "maxval":75.0, "errmsg":"Temp out of range"},
+    {"name":"Detector temp 2", "check":"show", "service":"ntcs", "keyword":"curtmp2", "minval":73.0, "maxval":75.0, "errmsg":"Temp out of range"},
+    {"name":"Auxiliary Tank",  "check":"show", "service":"ntcs", "keyword":"tmp5",                   "maxval":74.5, "errmsg":"The Aux Tank sensor could show 1.0K which is OK"},
+    {"name":"H1 cold finger",  "check":"show", "service":"ntcs", "keyword":"tmp8",    "minval":76.0, "maxval":78.0, "errmsg":"Temp out of range"},
   ],
   'rotator':
   [
-    {"name":"power switches", "check":"script",   "cmd":"ssh niresserver1 testRotator | fgrep ERROR",  "status": 1,  "errmsg":"Rotator is not Ready\n"},
+    {"name":"power switches", "check":"script", "cmd":"ssh niresserver1 testRotator | fgrep ERROR", "status": 1, "errmsg":"Rotator is not Ready\n"},
   ],
   'storage':
   [
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/",               "name": "niresserver1; /"},
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/usr/local",      "name": "niresserver1: /usr/local"},
-    {"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1501",    "name": "niresserver1: /s/sdata1501"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1500",    "name": "niresserver1: /s/sdata1500"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/s/sdata1502",    "name": "niresserver1: /s/sdata1502"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires1",    "name": "niresserver1; /home/nires1"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires2",    "name": "niresserver1; /home/nires2"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires3",    "name": "niresserver1; /home/nires3"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires4",    "name": "niresserver1; /home/nires4"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires5",    "name": "niresserver1; /home/nires5"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires6",    "name": "niresserver1; /home/nires6"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires7",    "name": "niresserver1; /home/nires7"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires8",    "name": "niresserver1; /home/nires8"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nires9",    "name": "niresserver1; /home/nires9"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/home/nireseng",  "name": "niresserver1; /home/nireseng"},
-   #{"check":"df", "minval":50, "maxval":90, "pattern":"/niresserver2",   "name": "/niresserver2: /niresserver2"},
+    {"name": "niresserver1; /",            "check":"df", "pattern":"/",            "minval":50, "maxval":90},
+    {"name": "niresserver1: /usr/local",   "check":"df", "pattern":"/usr/local",   "minval":50, "maxval":90},
+    {"name": "niresserver1: /s/sdata1501", "check":"df", "pattern":"/s/sdata1501", "minval":50, "maxval":90},
+    {"name": "niresserver1: /s/sdata1500", "check":"df", "pattern":"/s/sdata1500", "minval":50, "maxval":90},
+    {"name": "niresserver1: /s/sdata1502", "check":"df", "pattern":"/s/sdata1502", "minval":50, "maxval":90},
   ],
 }
