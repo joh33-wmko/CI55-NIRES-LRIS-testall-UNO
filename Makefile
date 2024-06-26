@@ -1,12 +1,12 @@
 ################################################################################
 #+
-#  Module:	$KROOT/util/testAll
+#  Module:	$KROOT/src/kss/nires/testall
 #
 #  Author:	JMader
 #
 #  Date:	2020-05-28
 #
-#  Description:	Makefile for $KROOT/util/testAll
+#  Description:	Makefile for $KROOT/src/kss/nires/testall
 #
 #  Revisions:
 #-
@@ -15,7 +15,7 @@
 #  If this is a release point, define version macros to override values
 #  inherited from the environment.
 
-override SYSNAM = util/testall
+override SYSNAM = kss/nires/testall
 override VERNUM = 0-0-0
 
 # Directories to make
@@ -24,7 +24,8 @@ DIRS = data
 
 # File to release
 
-RELBIN  = testall.py
+RELBIN  = testall_check.csh
+RELBIN += testall_check.py
 
 ################################################################################
 # KROOT boilerplate:
